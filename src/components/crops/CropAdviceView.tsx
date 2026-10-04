@@ -3,9 +3,10 @@ import { useApp } from '../../context/AppContext';
 import { calculateCropSuitability } from '../../data/agriculture/crops';
 import { FARMING_PRACTICES_GUIDANCE, getWaterGuidance } from '../../data/agriculture/knowledge';
 import { Sprout, Droplets, ChevronDown, ChevronUp, Info, MessageSquare } from 'lucide-react';
+import { t } from '../../utils/translations';
 
 export const CropAdviceView: React.FC = () => {
-  const { farmContext, weatherData, setActiveTab } = useApp();
+  const { farmContext, weatherData, setActiveTab, language } = useApp();
   const [expandedCrop, setExpandedCrop] = useState<string | null>(null);
 
   const recommendations = calculateCropSuitability(farmContext);
@@ -20,19 +21,19 @@ export const CropAdviceView: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-stone-200 gap-2">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 bg-stone-100 px-2 py-0.5 rounded">
-              Agronomic Decision Support
+              {t('agronomicDecisionSupport', language)}
             </span>
             <h2 className="text-2xl font-bold text-emerald-950 font-display mt-1 flex items-center gap-2">
               <Sprout className="w-6 h-6 text-emerald-800" />
-              Crop Advice & Farming Guidance
+              {t('cropAdviceTitle', language)}
             </h2>
             <p className="text-xs text-stone-600 mt-0.5">
-              Potentially suitable crop considerations based on your active soil and season parameters
+              {t('cropAdviceSub', language)}
             </p>
           </div>
 
           <div className="text-xs text-stone-600 bg-stone-100 px-3 py-1.5 rounded-xl border border-stone-300">
-            Active Context: <strong>{farmContext.season} · {farmContext.soil}</strong>
+            {t('activeContext', language)} <strong>{farmContext.season} · {farmContext.soil}</strong>
           </div>
         </div>
 
@@ -40,9 +41,9 @@ export const CropAdviceView: React.FC = () => {
         <div className="p-3 bg-stone-100 border border-stone-300 rounded-xl text-xs text-stone-700 flex items-start gap-2">
           <Info className="w-4 h-4 text-emerald-800 shrink-0 mt-0.5" />
           <div>
-            <strong className="text-emerald-950">Agronomic Suitability Model:</strong>
+            <strong className="text-emerald-950">{t('disclaimerTitle', language)}</strong>
             <span className="ml-1">
-              Framtech provides comparative suitability evaluations. We do NOT guarantee yields or market profits. Consider seed variety, planting dates, and local agricultural officer advice before finalizing planting decisions.
+              {t('disclaimerText', language)}
             </span>
           </div>
         </div>
@@ -52,7 +53,7 @@ export const CropAdviceView: React.FC = () => {
       <div className="bg-white border border-stone-300 rounded-2xl p-6 shadow-xs space-y-3">
         <div className="flex items-center gap-2 font-bold text-emerald-950 font-display text-lg">
           <Droplets className="w-5 h-5 text-blue-600" />
-          Current Water Situation Outlook
+          {t('waterOutlookTitle', language)}
         </div>
 
         <div className={`p-4 rounded-xl border space-y-2 ${
@@ -79,10 +80,10 @@ export const CropAdviceView: React.FC = () => {
       <div className="bg-white border border-stone-300 rounded-2xl p-6 shadow-xs space-y-4">
         <div>
           <h3 className="font-bold text-emerald-950 font-display text-lg">
-            Potentially Suitable Crops for Consideration
+            {t('suitableCropsTitle', language)}
           </h3>
           <p className="text-xs text-stone-500">
-            Evaluated against {farmContext.season} season, {farmContext.soil}, and {farmContext.water}
+            {t('suitableCropsSub', language)} ({farmContext.season}, {farmContext.soil}, {farmContext.water})
           </p>
         </div>
 
@@ -97,7 +98,7 @@ export const CropAdviceView: React.FC = () => {
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
-                      Agronomic Fit
+                      {t('agronomicFit', language)}
                     </span>
                     <span className="text-xs font-semibold px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300">
                       {rec.suitabilityLabel}
@@ -109,7 +110,7 @@ export const CropAdviceView: React.FC = () => {
                   </h4>
 
                   <div className="mt-3 space-y-1.5 text-xs text-stone-700">
-                    <div className="font-bold text-emerald-950 mb-1">Potentially suitable because:</div>
+                    <div className="font-bold text-emerald-950 mb-1">{t('suitableBecause', language)}</div>
                     {rec.reasons.map((r, i) => (
                       <div key={i}>• {r}</div>
                     ))}
@@ -122,7 +123,7 @@ export const CropAdviceView: React.FC = () => {
                       onClick={() => setExpandedCrop(isExpanded ? null : rec.crop)}
                       className="text-emerald-800 font-bold hover:underline flex items-center gap-1"
                     >
-                      <span>{isExpanded ? 'Hide Agronomic Reasoning' : 'View Agronomic Reasoning'}</span>
+                      <span>{isExpanded ? t('hideReasoning', language) : t('viewReasoning', language)}</span>
                       {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                     </button>
 
@@ -131,17 +132,17 @@ export const CropAdviceView: React.FC = () => {
                       className="text-stone-700 hover:text-emerald-950 font-medium flex items-center gap-1 text-[11px]"
                     >
                       <MessageSquare className="w-3 h-3 text-emerald-700" />
-                      <span>Ask AI Plan</span>
+                      <span>{t('askAiPlan', language)}</span>
                     </button>
                   </div>
 
                   {isExpanded && (
                     <div className="p-3 bg-white rounded-xl text-xs text-stone-700 space-y-2 border border-stone-300 animate-in fade-in duration-150">
-                      <div><strong>Water Requirement:</strong> {rec.waterReq}</div>
-                      <div><strong>Crop Duration:</strong> {rec.duration}</div>
-                      <div><strong>Soil Fit:</strong> {rec.soilFit}</div>
+                      <div><strong>{t('waterReq', language)}</strong> {rec.waterReq}</div>
+                      <div><strong>{t('cropDuration', language)}</strong> {rec.duration}</div>
+                      <div><strong>{t('soilFit', language)}</strong> {rec.soilFit}</div>
                       <div className="pt-1 text-amber-900 bg-amber-50 p-2 rounded border border-amber-200 text-[11px]">
-                        <strong>Important Consideration:</strong> {rec.caveats[0]}
+                        <strong>{t('importantConsideration', language)}</strong> {rec.caveats[0]}
                       </div>
                     </div>
                   )}
@@ -156,10 +157,10 @@ export const CropAdviceView: React.FC = () => {
       <div className="bg-white border border-stone-300 rounded-2xl p-6 shadow-xs space-y-4">
         <div>
           <h3 className="font-bold text-emerald-950 font-display text-lg">
-            Practical Farming Guidance
+            {t('practicalGuidanceTitle', language)}
           </h3>
           <p className="text-xs text-stone-500">
-            Practical field management strategies for weather adaptation
+            {t('practicalGuidanceSub', language)}
           </p>
         </div>
 

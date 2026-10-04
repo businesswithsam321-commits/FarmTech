@@ -3,9 +3,10 @@ import { Store, ArrowRight, AlertCircle } from 'lucide-react';
 import { marketDataService } from '../../services/market';
 import { MarketRecord } from '../../types/market';
 import { useApp } from '../../context/AppContext';
+import { t } from '../../utils/translations';
 
 export const DashboardMarketCard: React.FC = () => {
-  const { setActiveTab, farmContext, setSelectedMarketCommodity } = useApp();
+  const { setActiveTab, farmContext, setSelectedMarketCommodity, language } = useApp();
   const [snapshotRecords, setSnapshotRecords] = useState<MarketRecord[]>([]);
 
   useEffect(() => {
@@ -40,13 +41,13 @@ export const DashboardMarketCard: React.FC = () => {
           <div className="flex items-center gap-2">
             <Store className="w-5 h-5 text-emerald-800" />
             <div>
-              <h3 className="font-bold text-emerald-950 font-display text-base">MARKET SNAPSHOT</h3>
-              <p className="text-[11px] text-stone-500">Mandi modal prices for {farmContext.district}</p>
+              <h3 className="font-bold text-emerald-950 font-display text-base">{t('marketSnapshot', language)}</h3>
+              <p className="text-[11px] text-stone-500">{t('mandiPricesFor', language)} {farmContext.district}</p>
             </div>
           </div>
           <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-900 border border-amber-300 font-bold text-[10px] px-2 py-0.5 rounded">
             <AlertCircle className="w-3 h-3 text-amber-700" />
-            Demo data
+            {t('demoData', language)}
           </span>
         </div>
 
@@ -62,11 +63,11 @@ export const DashboardMarketCard: React.FC = () => {
                 <span className="text-[10px] text-stone-500">{r.market}</span>
               </div>
               <div className="text-lg font-bold text-emerald-950 font-display mt-1">
-                ₹{r.modalPrice.toLocaleString('en-IN')} <span className="text-[10px] font-normal text-stone-500">/qtl</span>
+                ₹{r.modalPrice.toLocaleString('en-IN')} <span className="text-[10px] font-normal text-stone-500">{t('perQtl', language)}</span>
               </div>
               <div className="text-[10px] text-stone-500 mt-1 flex justify-between">
-                <span>Range: ₹{r.minPrice} - ₹{r.maxPrice}</span>
-                <span className="text-amber-800 font-semibold">Demo</span>
+                <span>{t('range', language)} ₹{r.minPrice} - ₹{r.maxPrice}</span>
+                <span className="text-amber-800 font-semibold">{t('demoData', language)}</span>
               </div>
             </div>
           ))}
@@ -75,13 +76,13 @@ export const DashboardMarketCard: React.FC = () => {
 
       <div className="mt-4 pt-3 border-t border-stone-200 flex items-center justify-between text-xs">
         <span className="text-stone-500 text-[11px]">
-          Uses exact Market Data Service (`DemoMarketDataProvider`)
+          Demo Market Provider
         </span>
         <button
           onClick={() => handleOpenMarket()}
           className="text-emerald-800 hover:text-emerald-950 font-bold flex items-center gap-1"
         >
-          <span>View Market</span>
+          <span>{t('viewMarket', language)}</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>

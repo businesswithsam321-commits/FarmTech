@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Sprout } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { CropType, SeasonType, SoilType, WaterAvailability, CropStage } from '../../types/farm';
+import { t } from '../../utils/translations';
 
 interface FarmContextModalProps {
   isOpen: boolean;
@@ -9,7 +10,7 @@ interface FarmContextModalProps {
 }
 
 export const FarmContextModal: React.FC<FarmContextModalProps> = ({ isOpen, onClose }) => {
-  const { farmContext, updateFarmContext } = useApp();
+  const { farmContext, updateFarmContext, language } = useApp();
 
   const [crop, setCrop] = useState<CropType>(farmContext.crop);
   const [season, setSeason] = useState<SeasonType>(farmContext.season);
@@ -34,8 +35,8 @@ export const FarmContextModal: React.FC<FarmContextModalProps> = ({ isOpen, onCl
               <Sprout className="w-5 h-5 text-emerald-700" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-stone-900 font-display">Farm & Field Context</h2>
-              <p className="text-xs text-stone-500">Tailors advice & AI answers to your field</p>
+              <h2 className="text-lg font-bold text-stone-900 font-display">{t('editFarmProfile', language)}</h2>
+              <p className="text-xs text-stone-500">{t('editFarmProfileSub', language)}</p>
             </div>
           </div>
           <button onClick={onClose} className="text-stone-400 hover:text-stone-700 p-1 rounded-lg">
@@ -45,7 +46,7 @@ export const FarmContextModal: React.FC<FarmContextModalProps> = ({ isOpen, onCl
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
           <div>
-            <label className="block text-xs font-bold text-stone-800 uppercase mb-1">Primary Crop</label>
+            <label className="block text-xs font-bold text-stone-800 uppercase mb-1">{t('primaryCrop', language)}</label>
             <select
               value={crop}
               onChange={(e) => setCrop(e.target.value as CropType)}
@@ -65,7 +66,7 @@ export const FarmContextModal: React.FC<FarmContextModalProps> = ({ isOpen, onCl
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-stone-800 uppercase mb-1">Season</label>
+              <label className="block text-xs font-bold text-stone-800 uppercase mb-1">{t('farmingSeason', language)}</label>
               <select
                 value={season}
                 onChange={(e) => setSeason(e.target.value as SeasonType)}
@@ -78,7 +79,7 @@ export const FarmContextModal: React.FC<FarmContextModalProps> = ({ isOpen, onCl
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-stone-800 uppercase mb-1">Soil Type</label>
+              <label className="block text-xs font-bold text-stone-800 uppercase mb-1">{t('soilType', language)}</label>
               <select
                 value={soil}
                 onChange={(e) => setSoil(e.target.value as SoilType)}
@@ -94,7 +95,7 @@ export const FarmContextModal: React.FC<FarmContextModalProps> = ({ isOpen, onCl
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-stone-800 uppercase mb-1">Water Access</label>
+              <label className="block text-xs font-bold text-stone-800 uppercase mb-1">{t('waterSource', language)}</label>
               <select
                 value={water}
                 onChange={(e) => setWater(e.target.value as WaterAvailability)}
@@ -107,7 +108,7 @@ export const FarmContextModal: React.FC<FarmContextModalProps> = ({ isOpen, onCl
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-stone-800 uppercase mb-1">Crop Stage</label>
+              <label className="block text-xs font-bold text-stone-800 uppercase mb-1">{t('cropStage', language)}</label>
               <select
                 value={stage}
                 onChange={(e) => setStage(e.target.value as CropStage)}
@@ -131,13 +132,13 @@ export const FarmContextModal: React.FC<FarmContextModalProps> = ({ isOpen, onCl
               onClick={onClose}
               className="px-4 py-2 rounded-xl border border-stone-300 text-xs text-stone-700 font-medium hover:bg-stone-100"
             >
-              Cancel
+              {t('closeBtn', language)}
             </button>
             <button
               type="submit"
               className="px-5 py-2 rounded-xl bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold shadow-xs"
             >
-              Save Farm Context
+              {t('saveProfile', language)}
             </button>
           </div>
         </form>

@@ -1,17 +1,18 @@
 import React from 'react';
 import { LayoutDashboard, CloudSun, AlertTriangle, Sprout, Store, MessageSquare } from 'lucide-react';
 import { useApp, ActiveTab } from '../../context/AppContext';
+import { t } from '../../utils/translations';
 
 export const MobileNav: React.FC = () => {
-  const { activeTab, setActiveTab, weatherRisks } = useApp();
+  const { activeTab, setActiveTab, weatherRisks, language } = useApp();
 
   const navItems: { id: ActiveTab; label: string; icon: React.ReactNode; badge?: number }[] = [
-    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-    { id: 'weather', label: 'Weather', icon: <CloudSun className="w-5 h-5" /> },
-    { id: 'alerts', label: 'Alerts', icon: <AlertTriangle className="w-5 h-5" />, badge: weatherRisks.length },
-    { id: 'crops', label: 'Crops', icon: <Sprout className="w-5 h-5" /> },
-    { id: 'market', label: 'Market', icon: <Store className="w-5 h-5" /> },
-    { id: 'aichat', label: 'AI Chat', icon: <MessageSquare className="w-5 h-5" /> },
+    { id: 'dashboard', label: t('navDashboard', language), icon: <LayoutDashboard className="w-5 h-5" /> },
+    { id: 'weather', label: t('navWeather', language), icon: <CloudSun className="w-5 h-5" /> },
+    { id: 'alerts', label: t('navAlerts', language), icon: <AlertTriangle className="w-5 h-5" />, badge: weatherRisks.length },
+    { id: 'crops', label: t('navCrops', language), icon: <Sprout className="w-5 h-5" /> },
+    { id: 'market', label: t('navMarket', language), icon: <Store className="w-5 h-5" /> },
+    { id: 'aichat', label: t('navAiChat', language), icon: <MessageSquare className="w-5 h-5" /> },
   ];
 
   return (
@@ -27,7 +28,7 @@ export const MobileNav: React.FC = () => {
             }`}
           >
             <span>{item.icon}</span>
-            <span className="text-[10px]">{item.label}</span>
+            <span className="text-[10px] truncate max-w-[50px]">{item.label}</span>
             {item.badge !== undefined && item.badge > 0 && (
               <span className="absolute top-0.5 right-2 w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
             )}

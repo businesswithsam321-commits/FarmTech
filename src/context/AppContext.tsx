@@ -3,15 +3,19 @@ import { WeatherData, WeatherRisk } from '../types/weather';
 import { FarmContext } from '../types/farm';
 import { openMeteoService } from '../services/weather/openMeteoService';
 import { calculateWeatherRisks } from '../services/weather/riskEngine';
+import { geocodingService } from '../services/location/geocodingService';
+import { Language } from '../utils/translations';
 
 export type ActiveTab = 'dashboard' | 'weather' | 'alerts' | 'crops' | 'market' | 'aichat';
 
 interface AppContextType {
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
+  language: Language;
+  setLanguage: (lang: Language) => void;
   locationName: string;
-  latitude: number;
-  longitude: number;
+  latitude: number | null;
+  longitude: number | null;
   setLocation: (name: string, lat?: number, lon?: number) => void;
   farmContext: FarmContext;
   updateFarmContext: (updates: Partial<FarmContext>) => void;
@@ -43,9 +47,21 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
+  
+  // Language state with localStorage persistence
+  const [language, setLanguageState] = useState<Language>(() => {
+    const saved = localStorage.getItem('climatecheck_lang');
+    return (saved === 'hi' || saved === 'en') ? saved : 'en';
+  });
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    localStorage.setItem('climatecheck_lang', lang);
+  };
+
   const [locationName, setLocationName] = useState<string>('Bilaspur, Chhattisgarh');
-  const [latitude, setLatitude] = useState<number>(22.0797);
-  const [longitude, setLongitude] = useState<number>(82.1391);
+  const [latitude, setLatitude] = useState<number | null>(22.0797);
+  const [longitude, setLongitude] = useState<number | null>(82.1391);
   const [farmContext, setFarmContext] = useState<FarmContext>(DEFAULT_FARM_CONTEXT);
 
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
@@ -58,7 +74,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedMarketDistrict, setSelectedMarketDistrict] = useState<string>('Bilaspur');
   const [selectedMarketName, setSelectedMarketName] = useState<string>('Bilaspur');
 
-  const loadWeather = async (lat: number, lon: number, locName: string) => {
+  const loadWeather = async (lat: number | null, lon: number | null, locName: string) => {
+    if (lat === null || lon === null || isNaN(lat) || isNaN(lon)) {
+      setWeatherData(null);
+      setWeatherRisks([]);
+      setWeatherError("Coordinates unavailable for the selected location. Please select your location from the search list.");
+      setWeatherLoading(false);
+      return;
+    }
+
     setWeatherLoading(true);
     setWeatherError(null);
     try {
@@ -67,7 +91,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const risks = calculateWeatherRisks(data);
       setWeatherRisks(risks);
     } catch (err: any) {
-      setWeatherError("Unable to retrieve live weather data right now.");
+      setWeatherData(null);
+      setWeatherRisks([]);
+      setWeatherError("Weather data is temporarily unavailable. Please try again.");
     } finally {
       setWeatherLoading(false);
     }
@@ -77,7 +103,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     loadWeather(latitude, longitude, locationName);
   }, [latitude, longitude, locationName]);
 
-  const setLocation = (name: string, lat?: number, lon?: number) => {
+  const setLocation = async (name: string, lat?: number, lon?: number) => {
     setLocationName(name);
     const [dist, st] = name.split(',').map(s => s.trim());
     if (dist) {
@@ -85,24 +111,33 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setSelectedMarketName(dist);
       setFarmContext(prev => ({ ...prev, district: dist, state: st || prev.state }));
     }
-    if (lat && lon) {
+
+    if (lat !== undefined && lon !== undefined && lat !== null && lon !== null && !isNaN(lat) && !isNaN(lon)) {
       setLatitude(lat);
       setLongitude(lon);
     } else {
-      // Approximate coordinates for common preset locations
-      const locLower = name.toLowerCase();
-      if (locLower.includes('raipur')) {
-        setLatitude(21.2514); setLongitude(81.6296);
-      } else if (locLower.includes('durg')) {
-        setLatitude(21.1904); setLongitude(81.2849);
-      } else if (locLower.includes('korba')) {
-        setLatitude(22.3595); setLongitude(82.7501);
-      } else if (locLower.includes('ambikapur')) {
-        setLatitude(23.1214); setLongitude(83.1979);
-      } else if (locLower.includes('jagdalpur')) {
-        setLatitude(19.0744); setLongitude(82.0222);
-      } else {
-        setLatitude(22.0797); setLongitude(82.1391); // Bilaspur default
+      // Resolve coordinates asynchronously via Open-Meteo Geocoding API
+      setWeatherLoading(true);
+      try {
+        const results = await geocodingService.searchLocation(name);
+        if (results && results.length > 0) {
+          setLatitude(results[0].latitude);
+          setLongitude(results[0].longitude);
+        } else {
+          setLatitude(null);
+          setLongitude(null);
+          setWeatherData(null);
+          setWeatherRisks([]);
+          setWeatherError(`Coordinates unavailable for "${name}". Please select a location from the search list.`);
+          setWeatherLoading(false);
+        }
+      } catch (err) {
+        setLatitude(null);
+        setLongitude(null);
+        setWeatherData(null);
+        setWeatherRisks([]);
+        setWeatherError(`Unable to resolve coordinates for "${name}". Please try again.`);
+        setWeatherLoading(false);
       }
     }
   };
@@ -120,6 +155,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       value={{
         activeTab,
         setActiveTab,
+        language,
+        setLanguage,
         locationName,
         latitude,
         longitude,

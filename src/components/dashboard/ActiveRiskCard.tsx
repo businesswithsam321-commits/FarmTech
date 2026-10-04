@@ -1,9 +1,10 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { Info, ArrowRight, ShieldAlert } from 'lucide-react';
+import { t } from '../../utils/translations';
 
 export const ActiveRiskCard: React.FC = () => {
-  const { weatherRisks, setActiveTab } = useApp();
+  const { weatherRisks, setActiveTab, language } = useApp();
 
   const topRisk = weatherRisks[0];
 
@@ -15,12 +16,12 @@ export const ActiveRiskCard: React.FC = () => {
             ✓
           </div>
           <div>
-            <h3 className="font-bold text-emerald-950 font-display">No Major Weather Risks Detected</h3>
-            <p className="text-xs text-stone-600">Current forecast parameters remain within normal operating thresholds.</p>
+            <h3 className="font-bold text-emerald-950 font-display">{t('noMajorRisks', language)}</h3>
+            <p className="text-xs text-stone-600">{t('normalThresholdsMsg', language)}</p>
           </div>
         </div>
         <span className="text-[10px] bg-stone-100 text-stone-600 px-2 py-1 rounded font-semibold uppercase tracking-wider">
-          ClimateCheck Risk Indicator
+          {t('riskIndicatorLabel', language)}
         </span>
       </div>
     );
@@ -40,17 +41,17 @@ export const ActiveRiskCard: React.FC = () => {
             isModerate ? 'bg-amber-100 text-amber-900 border border-amber-300' :
             'bg-blue-100 text-blue-900 border border-blue-200'
           }`}>
-            {topRisk.severity} Risk
+            {isHigh ? t('highRisk', language) : isModerate ? t('moderateRisk', language) : t('infoRisk', language)}
           </span>
           <span className="text-xs text-stone-500">•</span>
-          <span className="text-xs text-stone-500 font-medium">Framtech Risk Indicator</span>
+          <span className="text-xs text-stone-500 font-medium">{t('framtechRiskIndicator', language)}</span>
         </div>
 
         <button
           onClick={() => setActiveTab('alerts')}
           className="text-xs font-semibold text-emerald-800 hover:underline flex items-center gap-1"
         >
-          <span>View All Risks</span>
+          <span>{t('viewAllRisks', language)}</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
@@ -69,7 +70,7 @@ export const ActiveRiskCard: React.FC = () => {
       <div className="p-3.5 bg-stone-100/90 border border-stone-300 rounded-xl space-y-1 text-xs text-stone-800">
         <div className="font-bold text-emerald-950 flex items-center gap-1.5">
           <Info className="w-4 h-4 text-emerald-800 shrink-0" />
-          Why this alert is triggered:
+          {t('whyAlertTriggered', language)}
         </div>
         <div className="text-stone-700 pl-5">
           {topRisk.triggerReason}
@@ -79,13 +80,13 @@ export const ActiveRiskCard: React.FC = () => {
       {/* Recommended Action */}
       <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         <div className="text-stone-800">
-          <strong className="text-emerald-950">Recommended Action:</strong> "{topRisk.recommendedAction}"
+          <strong className="text-emerald-950">{t('recommendedAction', language)}</strong> "{topRisk.recommendedAction}"
         </div>
         <button
           onClick={() => setActiveTab('aichat')}
           className="shrink-0 px-3.5 py-2 rounded-xl bg-emerald-900 text-white font-medium hover:bg-emerald-950 transition-colors flex items-center justify-center gap-1.5 shadow-xs text-xs"
         >
-          <span>Ask AI for Steps</span>
+          <span>{t('askAiSteps', language)}</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>

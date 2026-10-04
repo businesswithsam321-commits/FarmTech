@@ -6,9 +6,10 @@ import { DashboardMarketCard } from './DashboardMarketCard';
 import { QuickAiEntry } from './QuickAiEntry';
 import { useApp } from '../../context/AppContext';
 import { Sprout, ArrowRight } from 'lucide-react';
+import { t } from '../../utils/translations';
 
 export const DashboardView: React.FC = () => {
-  const { setActiveTab } = useApp();
+  const { setActiveTab, language } = useApp();
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto w-full pb-10">
@@ -29,15 +30,15 @@ export const DashboardView: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Sprout className="w-5 h-5 text-emerald-800" />
                 <div>
-                  <h3 className="font-bold text-emerald-950 font-display text-base">CROP ADVICE PREVIEW</h3>
-                  <p className="text-[11px] text-stone-500">Potentially suitable based on your current context</p>
+                  <h3 className="font-bold text-emerald-950 font-display text-base">{t('cropAdvicePreview', language)}</h3>
+                  <p className="text-[11px] text-stone-500">{t('cropAdvicePreviewSub', language)}</p>
                 </div>
               </div>
               <button
                 onClick={() => setActiveTab('crops')}
                 className="text-xs text-emerald-800 font-bold hover:underline"
               >
-                View Advice →
+                {t('viewAdvice', language)}
               </button>
             </div>
 
@@ -46,7 +47,7 @@ export const DashboardView: React.FC = () => {
                 <div className="flex justify-between items-center font-bold text-emerald-950">
                   <span>Rice / Paddy (MTU 1010)</span>
                   <span className="text-[10px] bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded font-semibold">
-                    Potentially suitable
+                    {t('potentiallySuitable', language)}
                   </span>
                 </div>
                 <p className="text-stone-600 mt-1 text-[11px]">
@@ -58,7 +59,7 @@ export const DashboardView: React.FC = () => {
                 <div className="flex justify-between items-center font-bold text-emerald-950">
                   <span>Pigeon Pea / Arhar</span>
                   <span className="text-[10px] bg-stone-200 text-stone-800 px-2 py-0.5 rounded font-semibold">
-                    Consider
+                    {t('consider', language)}
                   </span>
                 </div>
                 <p className="text-stone-600 mt-1 text-[11px]">
@@ -69,12 +70,12 @@ export const DashboardView: React.FC = () => {
           </div>
 
           <div className="mt-4 pt-3 border-t border-stone-200 flex items-center justify-between text-xs text-stone-500">
-            <span>Agronomic suitability model</span>
+            <span>{t('agronomicModel', language)}</span>
             <button
               onClick={() => setActiveTab('crops')}
               className="text-emerald-800 font-bold flex items-center gap-1"
             >
-              <span>Explore Crop Reasoning</span>
+              <span>{t('exploreCropReasoning', language)}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>

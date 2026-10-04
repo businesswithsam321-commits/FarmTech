@@ -8,9 +8,10 @@ import { marketDataService } from '../../services/market';
 import { MarketFilters, MarketRecord, MarketResponse } from '../../types/market';
 import { useApp } from '../../context/AppContext';
 import { RefreshCw, AlertTriangle, Inbox } from 'lucide-react';
+import { t } from '../../utils/translations';
 
 export const MarketView: React.FC = () => {
-  const { farmContext, selectedMarketCommodity, setSelectedMarketCommodity } = useApp();
+  const { farmContext, selectedMarketCommodity, setSelectedMarketCommodity, language } = useApp();
 
   const [filters, setFilters] = useState<MarketFilters>({
     state: 'Chhattisgarh',
@@ -140,7 +141,7 @@ export const MarketView: React.FC = () => {
             <AlertTriangle className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-rose-950 font-display">Market Data Unavailable</h3>
+            <h3 className="text-lg font-bold text-rose-950 font-display">{t('marketDataUnavailable', language)}</h3>
             <p className="text-xs text-rose-800 mt-1 max-w-md mx-auto">
               We couldn't connect to the market data provider right now. Please check your connection and try again.
             </p>
@@ -150,7 +151,7 @@ export const MarketView: React.FC = () => {
             className="px-5 py-2.5 rounded-xl bg-rose-900 hover:bg-rose-950 text-white text-xs font-semibold inline-flex items-center gap-2 shadow-xs transition-all"
           >
             <RefreshCw className="w-4 h-4" />
-            <span>Retry Loading Data</span>
+            <span>{t('retryWeather', language)}</span>
           </button>
         </div>
       )}
@@ -162,7 +163,7 @@ export const MarketView: React.FC = () => {
             <Inbox className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-stone-900 font-display">No Market Records Found</h3>
+            <h3 className="text-lg font-bold text-stone-900 font-display">{t('noMarketRecords', language)}</h3>
             <p className="text-xs text-stone-500 mt-1 max-w-md mx-auto">
               No agricultural market records match your current filter selection. Try clearing or expanding your search filters.
             </p>
@@ -172,7 +173,7 @@ export const MarketView: React.FC = () => {
             className="px-5 py-2.5 rounded-xl bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold inline-flex items-center gap-2 shadow-xs transition-all"
           >
             <RefreshCw className="w-4 h-4" />
-            <span>Clear Filters & Reset</span>
+            <span>{t('clearFiltersReset', language)}</span>
           </button>
         </div>
       )}

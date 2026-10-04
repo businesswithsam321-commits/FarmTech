@@ -1,9 +1,10 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { MessageSquare, ArrowRight, Sparkles } from 'lucide-react';
+import { t } from '../../utils/translations';
 
 export const QuickAiEntry: React.FC = () => {
-  const { setActiveTab } = useApp();
+  const { setActiveTab, language } = useApp();
 
   const handlePromptClick = () => {
     setActiveTab('aichat');
@@ -17,8 +18,8 @@ export const QuickAiEntry: React.FC = () => {
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-lg font-bold font-display text-white">ASK FRAMTECH AI</h3>
-            <p className="text-xs text-emerald-200">Contextual answers on weather, water, crops, & mandi prices</p>
+            <h3 className="text-lg font-bold font-display text-white">{t('askFramtechAi', language)}</h3>
+            <p className="text-xs text-emerald-200">{t('quickAiSub', language)}</p>
           </div>
         </div>
 
@@ -27,36 +28,38 @@ export const QuickAiEntry: React.FC = () => {
           className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-sm shrink-0"
         >
           <MessageSquare className="w-4 h-4" />
-          <span>Open AI Assistant</span>
+          <span>{t('openAiAssistant', language)}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>
 
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-xs">
-        <span className="text-[10px] uppercase font-bold text-emerald-300 shrink-0 tracking-wider">Suggested Questions:</span>
+        <span className="text-[10px] uppercase font-bold text-emerald-300 shrink-0 tracking-wider">
+          {t('suggestedQuestions', language)}
+        </span>
         <button
           onClick={handlePromptClick}
           className="shrink-0 px-3 py-1.5 rounded-full bg-emerald-900/90 border border-emerald-800 hover:border-emerald-500 text-emerald-100 text-xs transition-all"
         >
-          Will rain affect my crop?
+          {t('q1', language)}
         </button>
         <button
           onClick={handlePromptClick}
           className="shrink-0 px-3 py-1.5 rounded-full bg-emerald-900/90 border border-emerald-800 hover:border-emerald-500 text-emerald-100 text-xs transition-all"
         >
-          Should I irrigate today?
+          {t('q2', language)}
         </button>
         <button
           onClick={handlePromptClick}
           className="shrink-0 px-3 py-1.5 rounded-full bg-emerald-900/90 border border-emerald-800 hover:border-emerald-500 text-emerald-100 text-xs transition-all"
         >
-          What should I grow this season?
+          {t('q3', language)}
         </button>
         <button
           onClick={handlePromptClick}
           className="shrink-0 px-3 py-1.5 rounded-full bg-emerald-900/90 border border-emerald-800 hover:border-emerald-500 text-emerald-100 text-xs transition-all"
         >
-          What is the current rice price shown here?
+          {t('q4', language)}
         </button>
       </div>
     </div>

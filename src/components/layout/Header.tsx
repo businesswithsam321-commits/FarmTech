@@ -3,17 +3,18 @@ import { MapPin, Sprout, ChevronDown } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { LocationModal } from '../common/LocationModal';
 import { FarmContextModal } from '../common/FarmContextModal';
+import { t } from '../../utils/translations';
 
 export const Header: React.FC = () => {
-  const { locationName, farmContext } = useApp();
+  const { locationName, farmContext, language, setLanguage } = useApp();
   const [isLocModalOpen, setIsLocModalOpen] = useState(false);
   const [isContextModalOpen, setIsContextModalOpen] = useState(false);
 
   return (
     <>
-      <header className="sticky top-0 z-30 bg-[#F8F6F0]/95 backdrop-blur-md border-b border-stone-300 px-4 md:px-8 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-emerald-900 text-white flex items-center justify-center font-bold text-lg shadow-xs border border-emerald-700/30">
+      <header className="sticky top-0 z-30 bg-[#F8F6F0]/95 backdrop-blur-md border-b border-stone-300 px-3 md:px-8 py-3 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="w-9 h-9 rounded-xl bg-emerald-900 text-white flex items-center justify-center font-bold text-lg shadow-xs border border-emerald-700/30 shrink-0">
             <svg className="w-5 h-5 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2a10 10 0 0 0-10 10c0 5.25 7 10 10 10s10-4.75 10-10A10 10 0 0 0 12 2Z"></path>
               <path d="M12 12v6"></path>
@@ -22,29 +23,53 @@ export const Header: React.FC = () => {
             </svg>
           </div>
           <div>
-            <span className="font-display font-bold tracking-tight text-emerald-950 text-lg sm:text-xl block leading-tight">
-              FRAMTECH
+            <span className="font-display font-bold tracking-tight text-emerald-950 text-base sm:text-xl block leading-tight">
+              {t('platformTitle', language)}
             </span>
-            <span className="text-[11px] text-stone-500 block tracking-normal -mt-0.5">
-              AI Climate & Farming Information Platform
+            <span className="text-[10px] sm:text-[11px] text-stone-500 block tracking-normal -mt-0.5">
+              {t('platformSubtitle', language)}
             </span>
           </div>
         </div>
 
-        {/* Location & Farm Context Quick Bar */}
-        <div className="flex items-center gap-2">
+        {/* Location, Farm Context & Language Controls */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Language Switcher */}
+          <div className="flex items-center bg-white border border-stone-300 rounded-xl p-0.5 shadow-xs text-xs font-semibold">
+            <button
+              onClick={() => setLanguage('en')}
+              className={`px-2 py-1 rounded-lg transition-all ${
+                language === 'en'
+                  ? 'bg-emerald-900 text-white shadow-xs'
+                  : 'text-stone-700 hover:text-stone-900'
+              }`}
+            >
+              EN
+            </button>
+            <button
+              onClick={() => setLanguage('hi')}
+              className={`px-2 py-1 rounded-lg transition-all ${
+                language === 'hi'
+                  ? 'bg-emerald-900 text-white shadow-xs'
+                  : 'text-stone-700 hover:text-stone-900'
+              }`}
+            >
+              हिंदी
+            </button>
+          </div>
+
           <button
             onClick={() => setIsLocModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-stone-300 hover:border-emerald-700 transition-all text-xs font-medium text-stone-800 shadow-xs"
+            className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white border border-stone-300 hover:border-emerald-700 transition-all text-xs font-medium text-stone-800 shadow-xs"
           >
-            <MapPin className="w-3.5 h-3.5 text-emerald-700" />
-            <span className="truncate max-w-[130px] sm:max-w-none">{locationName}</span>
-            <span className="text-emerald-700 font-semibold text-[11px] ml-0.5">[Change]</span>
+            <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+            <span className="truncate max-w-[80px] sm:max-w-none">{locationName}</span>
+            <span className="text-emerald-700 font-semibold text-[11px] ml-0.5">[{t('change', language)}]</span>
           </button>
 
           <button
             onClick={() => setIsContextModalOpen(true)}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-200/70 border border-stone-300 hover:border-stone-400 text-xs text-stone-800 font-medium transition-all"
+            className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-200/70 border border-stone-300 hover:border-stone-400 text-xs text-stone-800 font-medium transition-all"
           >
             <Sprout className="w-3.5 h-3.5 text-emerald-700" />
             <span>{farmContext.crop} · {farmContext.season}</span>
